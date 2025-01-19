@@ -1,6 +1,6 @@
 {
   "name": "js-compat-check-linux-arm64-gnu",
-  "version": "0.1.0-alpha.11",
+  "version": "0.1.0-alpha.12",
   "repository": {
     "url": "https://github.com/lidessen/jsco"
   },
