@@ -1,5 +1,5 @@
-const { run } = require('./index.js');
+#!/usr/bin/env node
 
-console.log(process.argv.slice(2), typeof run);
+const { run } = require('./index.js');
 
 run(process.argv.slice(2));
