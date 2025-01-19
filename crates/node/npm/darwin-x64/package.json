@@ -1,6 +1,9 @@
 {
   "name": "js-compat-check-darwin-x64",
   "version": "0.1.0-alpha.10",
+  "repository": {
+    "url": "https://github.com/lidessen/jsco"
+  },
   "os": [
     "darwin"
   ],
