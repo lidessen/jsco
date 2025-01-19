@@ -1,0 +1,24 @@
+[package]
+name = "jsco"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description.workspace = true
+license.workspace = true
+
+[dependencies]
+oxc.workspace = true
+oxc_semantic.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+rayon.workspace = true
+once_cell.workspace = true
+reqwest = { version = "0.12", default-features = false, features = [
+    "json",
+    "stream",
+    "rustls-tls",
+] }
+tokio = { version = "1.0", features = ["full"] }
+futures-util = "0.3"
+url = "2.5"
+md5 = "0.7"

@@ -1,0 +1,26 @@
+[package]
+name = "jsco_cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "jsco"
+path = "src/main.rs"
+
+[dependencies]
+jsco.workspace = true
+clap.workspace = true
+tokio.workspace = true
+reqwest.workspace = true
+futures-util.workspace = true
+md5.workspace = true
+url.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+oxc.workspace = true
+chrono.workspace = true
+maud = "*"
+open = "5.0.1"
