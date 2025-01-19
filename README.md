@@ -1,13 +1,12 @@
-# JSCO (JavaScript Compatibility Checker)
+# js-compat-check (JavaScript Compatibility Checker)
 
-JSCO is a JavaScript compatibility checking tool that analyzes your code to detect JavaScript features and helps you understand compatibility across different browsers and runtime environments.
+js-compat-check is a JavaScript compatibility checking tool that analyzes your code to detect JavaScript features and helps you understand compatibility across different browsers and runtime environments.
 
 ## Features
 
 - 🔍 Detect JavaScript features used in your code
 - 📊 Generate detailed browser compatibility reports
 - 🌐 Support for both local files and remote URLs
-- 💾 Built-in caching system for better performance
 - 🛠️ Available as both CLI tool and Node.js package
 
 ## Installation
@@ -16,10 +15,10 @@ JSCO is a JavaScript compatibility checking tool that analyzes your code to dete
 
 ```bash
 # Using npm
-npm install jsco
+npm install js-compat-check
 
 # Using pnpm
-pnpm add jsco
+pnpm add js-compat-check
 ```
 
 ### From Source
@@ -37,13 +36,13 @@ cargo build --release
 ### CLI
 
 ```bash
-jsco <file-or-url>
+npx js-compat-check <file-or-url>
 ```
 
 ### Node.js API
 
 ```javascript
-import { jsco } from 'jsco';
+import { jsco } from 'js-compat-check';
 
 // Analyze a local file
 const report = await jsco('./path/to/file.js');
