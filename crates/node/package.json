@@ -3,6 +3,9 @@
   "version": "0.1.0-alpha.9",
   "main": "index.js",
   "types": "index.d.ts",
+  "repository": {
+    "url": "https://github.com/lidessen/jsco"
+  },
   "napi": {
     "name": "js-compat-check",
     "triples": {
