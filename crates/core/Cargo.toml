@@ -22,3 +22,6 @@ tokio = { version = "1.0", features = ["full"] }
 futures-util = "0.3"
 url = "2.5"
 md5 = "0.7"
+glob.workspace = true
+console.workspace = true
+indicatif.workspace = true

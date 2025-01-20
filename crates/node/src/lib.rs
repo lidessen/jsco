@@ -8,7 +8,7 @@ extern crate napi_derive;
 
 #[napi]
 pub async fn jsco(source_code: String) -> Result<serde_json::Value> {
-  let report = core::jsco(source_code.as_str()).await;
+  let report = core::jsco(vec![source_code.into()]).await;
   Ok(serde_json::to_value(report).unwrap())
 }
 

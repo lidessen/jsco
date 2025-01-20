@@ -23,6 +23,8 @@ pub struct Report {
   pub source_code: String,
 }
 
+pub type Reports = Vec<Report>;
+
 fn serialize_browser_support<S>(
   browser_support: &Arc<Mutex<BrowserSupport>>,
   serializer: S,
