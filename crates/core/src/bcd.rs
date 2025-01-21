@@ -70,6 +70,18 @@ static FEATURE_COMPAT_CACHE: Lazy<HashMap<JsFeature, OnceCell<Compatibility>>> =
     JsFeature::RestSpread,
     JsFeature::Await,
     JsFeature::Decorator,
+    JsFeature::ServiceWorker,
+    JsFeature::PerformanceNow,
+    JsFeature::RequestIdleCallback,
+    JsFeature::TypedArray,
+    JsFeature::Int8Array,
+    JsFeature::Uint8Array,
+    JsFeature::Int16Array,
+    JsFeature::Uint16Array,
+    JsFeature::Int32Array,
+    JsFeature::Uint32Array,
+    JsFeature::Float32Array,
+    JsFeature::Float64Array,
   ] {
     cache.insert(feature, OnceCell::new());
   }
@@ -216,6 +228,18 @@ impl JsFeature {
       JsFeature::RestSpread => "javascript.operators.spread",
       JsFeature::Await => "javascript.operators.await",
       JsFeature::Decorator => "javascript.builtins.decorators",
+      JsFeature::ServiceWorker => "api.Worker",
+      JsFeature::PerformanceNow => "api.Performance.now",
+      JsFeature::RequestIdleCallback => "api.Window.requestIdleCallback",
+      JsFeature::TypedArray => "javascript.builtins.TypedArray",
+      JsFeature::Int8Array => "javascript.builtins.Int8Array",
+      JsFeature::Uint8Array => "javascript.builtins.Uint8Array",
+      JsFeature::Int16Array => "javascript.builtins.Int16Array",
+      JsFeature::Uint16Array => "javascript.builtins.Uint16Array",
+      JsFeature::Int32Array => "javascript.builtins.Int32Array",
+      JsFeature::Uint32Array => "javascript.builtins.Uint32Array",
+      JsFeature::Float32Array => "javascript.builtins.Float32Array",
+      JsFeature::Float64Array => "javascript.builtins.Float64Array",
     }
   }
 }

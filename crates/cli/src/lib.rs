@@ -1,3 +1,4 @@
+use browserslist::{execute, Distrib, Opts};
 use clap::Parser;
 use jsco::jsco;
 use jsco::report::Reports;
@@ -64,6 +65,38 @@ impl ReportOutput for Reports {
   fn output(&self, format: OutputFormat) {
     match format {
       OutputFormat::HTML => {
+        let browsers = execute(&Opts::default()).unwrap_or_default();
+        let mut chrome_versions = Vec::new();
+        let mut firefox_versions = Vec::new();
+        let mut safari_versions = Vec::new();
+        let mut edge_versions = Vec::new();
+        let mut other_browsers = Vec::new();
+        for browser in &browsers {
+          let name = browser.name().to_lowercase();
+          match name.as_str() {
+            "chrome" | "and_chr" | "chrome android" => {
+              chrome_versions.push(browser.version().to_string())
+            }
+            "firefox" | "firefox android" => firefox_versions.push(browser.version().to_string()),
+            "safari" | "ios_saf" => safari_versions.push(browser.version().to_string()),
+            "edge" => edge_versions.push(browser.version().to_string()),
+            _ => other_browsers.push((browser.name(), browser.version())),
+          }
+        }
+
+        // Group and sort versions
+        let format_versions = |versions: &[String]| -> String {
+          let mut versions = versions.to_vec();
+          versions.sort();
+          versions.join(", ")
+        };
+
+        let default_version = "0".to_string();
+        chrome_versions.sort();
+        firefox_versions.sort();
+        safari_versions.sort();
+        edge_versions.sort();
+
         let html_output = html! {
           html class="bg-slate-50" {
             head {
@@ -113,6 +146,124 @@ impl ReportOutput for Reports {
                   }
                 }
 
+                div class="mb-12 bg-white rounded-xl shadow-sm border border-slate-200/60 p-6" {
+                  h2 class="text-lg font-semibold text-slate-800 mb-4" {
+                    "Target Browsers"
+                    span class="ml-2 text-sm font-normal text-slate-500" {
+                      "(from .browserslistrc)"
+                    }
+                  }
+                  div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" {
+                    @if !chrome_versions.is_empty() {
+                      div class="p-4 rounded-lg bg-gradient-to-br from-slate-50 to-white border border-slate-200" {
+                        div class="flex items-center gap-2 text-slate-700 mb-3" {
+                          span class="font-medium" { "Chrome" }
+                        }
+                        div class="space-y-1.5" {
+                          div class="text-xs font-medium uppercase tracking-wider text-slate-500" { "Required Versions" }
+                          div class="text-sm text-slate-700 font-mono" {
+                            @let min_version = chrome_versions.iter().min().unwrap_or(&default_version);
+                            @let max_version = chrome_versions.iter().max().unwrap_or(&default_version);
+                            @if min_version == max_version {
+                              (format!("v{}", min_version))
+                            } @else {
+                              (format!("v{} - v{}", min_version, max_version))
+                            }
+                          }
+                          div class="text-xs text-slate-500 mt-1" {
+                            (format!("Including: {}", format_versions(&chrome_versions)))
+                          }
+                        }
+                      }
+                    }
+
+                    @if !firefox_versions.is_empty() {
+                      div class="p-4 rounded-lg bg-gradient-to-br from-slate-50 to-white border border-slate-200" {
+                        div class="flex items-center gap-2 text-slate-700 mb-3" {
+                          span class="font-medium" { "Firefox" }
+                        }
+                        div class="space-y-1.5" {
+                          div class="text-xs font-medium uppercase tracking-wider text-slate-500" { "Required Versions" }
+                          div class="text-sm text-slate-700 font-mono" {
+                            @let min_version = firefox_versions.iter().min().unwrap_or(&default_version);
+                            @let max_version = firefox_versions.iter().max().unwrap_or(&default_version);
+                            @if min_version == max_version {
+                              (format!("v{}", min_version))
+                            } @else {
+                              (format!("v{} - v{}", min_version, max_version))
+                            }
+                          }
+                          div class="text-xs text-slate-500 mt-1" {
+                            (format!("Including: {}", format_versions(&firefox_versions)))
+                          }
+                        }
+                      }
+                    }
+
+                    @if !safari_versions.is_empty() {
+                      div class="p-4 rounded-lg bg-gradient-to-br from-slate-50 to-white border border-slate-200" {
+                        div class="flex items-center gap-2 text-slate-700 mb-3" {
+                          span class="font-medium" { "Safari" }
+                        }
+                        div class="space-y-1.5" {
+                          div class="text-xs font-medium uppercase tracking-wider text-slate-500" { "Required Versions" }
+                          div class="text-sm text-slate-700 font-mono" {
+                            @let min_version = safari_versions.iter().min().unwrap_or(&default_version);
+                            @let max_version = safari_versions.iter().max().unwrap_or(&default_version);
+                            @if min_version == max_version {
+                              (format!("v{}", min_version))
+                            } @else {
+                              (format!("v{} - v{}", min_version, max_version))
+                            }
+                          }
+                          div class="text-xs text-slate-500 mt-1" {
+                            (format!("Including: {}", format_versions(&safari_versions)))
+                          }
+                        }
+                      }
+                    }
+
+                    @if !edge_versions.is_empty() {
+                      div class="p-4 rounded-lg bg-gradient-to-br from-slate-50 to-white border border-slate-200" {
+                        div class="flex items-center gap-2 text-slate-700 mb-3" {
+                          span class="font-medium" { "Edge" }
+                        }
+                        div class="space-y-1.5" {
+                          div class="text-xs font-medium uppercase tracking-wider text-slate-500" { "Required Versions" }
+                          div class="text-sm text-slate-700 font-mono" {
+                            @let min_version = edge_versions.iter().min().unwrap_or(&default_version);
+                            @let max_version = edge_versions.iter().max().unwrap_or(&default_version);
+                            @if min_version == max_version {
+                              (format!("v{}", min_version))
+                            } @else {
+                              (format!("v{} - v{}", min_version, max_version))
+                            }
+                          }
+                          div class="text-xs text-slate-500 mt-1" {
+                            (format!("Including: {}", format_versions(&edge_versions)))
+                          }
+                        }
+                      }
+                    }
+
+                    @if !other_browsers.is_empty() {
+                      div class="p-4 rounded-lg bg-gradient-to-br from-slate-50 to-white border border-slate-200" {
+                        div class="flex items-center gap-2 text-slate-700 mb-3" {
+                          span class="font-medium" { "Other" }
+                        }
+                        div class="space-y-2" {
+                          @for (name, version) in &other_browsers {
+                            div class="text-sm text-slate-600" {
+                              span class="font-medium" { (name) }
+                              span class="font-mono ml-2" { (format!("v{}", version)) }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+
                 @for report in self {
                   @if !report.found_features.is_empty() {
                     div class="space-y-8 mb-12" {
@@ -144,9 +295,26 @@ impl ReportOutput for Reports {
                               @let support = feature.support.lock().unwrap();
                               @let mut browser_info: Vec<_> = support.iter().collect();
                               @let _ = browser_info.sort_by(|a, b| a.0.cmp(b.0));
+                              @let browsers = execute(&Opts::default()).unwrap_or_default();
 
                               @for (browser, version) in &browser_info {
-                                div class="inline-flex items-center px-3 py-1.5 rounded-full text-sm bg-blue-50 text-blue-700 border border-blue-100 shadow-sm hover:bg-blue-100 transition-colors" {
+                                @let is_compatible = is_supported(browser, version, browsers.as_slice());
+                                div class=(if is_compatible {
+                                  "inline-flex items-center px-3 py-1.5 rounded-full text-sm bg-green-50 text-green-700 border border-green-100 shadow-sm hover:bg-green-100 transition-colors"
+                                } else {
+                                  "inline-flex items-center px-3 py-1.5 rounded-full text-sm bg-red-50 text-red-700 border border-red-100 shadow-sm hover:bg-red-100 transition-colors"
+                                }) {
+                                  span class="mr-1.5" {
+                                    @if is_compatible {
+                                      svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" {
+                                        path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" {}
+                                      }
+                                    } @else {
+                                      svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" {
+                                        path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" {}
+                                      }
+                                    }
+                                  }
                                   (format!("{} ≥ {}", browser, version))
                                 }
                               }
@@ -237,4 +405,60 @@ impl ReportOutput for Reports {
       }
     }
   }
+}
+
+pub fn is_supported(browser: &str, version: &str, browsers: &[Distrib]) -> bool {
+  // If no browsers are specified, consider it supported
+  if browsers.is_empty() {
+    return true;
+  }
+
+  // Get the browser name in lowercase for case-insensitive comparison
+  let browser_name = browser.to_lowercase();
+
+  // Map our internal names to browserslist names
+  let matches_browser = |b: &Distrib| {
+    let b_name = b.name().to_lowercase();
+    match browser_name.as_str() {
+      "chrome" => matches!(b_name.as_str(), "and_chr" | "chrome" | "chrome android"),
+      "firefox" => matches!(b_name.as_str(), "firefox" | "firefox android"),
+      "safari" => matches!(b_name.as_str(), "safari" | "ios_saf"),
+      "edge" => b_name == "edge",
+      _ => false,
+    }
+  };
+
+  // Find matching browsers from the requirements
+  let matching_browsers: Vec<_> = browsers
+    .into_iter()
+    .filter(|b| matches_browser(b))
+    .collect();
+
+  // If no matching browsers found in requirements, consider it supported
+  if matching_browsers.is_empty() {
+    return true;
+  }
+
+  // Skip if version is "true" (meaning always supported)
+  if version == "true" {
+    return true;
+  }
+
+  // Get our major version number
+  let our_version = version.split('.').next().unwrap_or("0");
+  let our_version: u32 = our_version.parse().unwrap_or(0);
+
+  // Check against all matching browsers
+  for browser in matching_browsers {
+    let their_version = browser.version().split('.').next().unwrap_or("0");
+    let their_version: u32 = their_version.parse().unwrap_or(0);
+
+    // If our required version is higher than their version, it's not supported
+    if our_version > their_version {
+      return false;
+    }
+  }
+
+  // If we got here, all browser requirements are met
+  true
 }

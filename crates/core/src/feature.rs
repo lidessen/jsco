@@ -28,6 +28,22 @@ pub enum JsFeature {
   // ES2017
   Await,
   Decorator,
+  ServiceWorker,
+  // performance.now()
+  PerformanceNow,
+  // requestIdleCallback
+  RequestIdleCallback,
+  // TypedArray
+  TypedArray,
+  // Int8Array
+  Int8Array,
+  Uint8Array,
+  Int16Array,
+  Uint16Array,
+  Int32Array,
+  Uint32Array,
+  Float32Array,
+  Float64Array,
 }
 
 impl Serialize for JsFeature {

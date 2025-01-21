@@ -1,9 +1,12 @@
+use oxc::allocator::Allocator;
 use oxc::ast::ast::ArrayExpressionElement;
+use oxc::ast::ast::Expression;
+use oxc::ast::ast::MemberExpression;
 use oxc::ast::AstKind;
 use oxc::diagnostics::OxcDiagnostic;
 use oxc::parser::Parser;
 use oxc::span::SourceType;
-use oxc::{allocator::Allocator, span::Span};
+use oxc::span::Span;
 use oxc_semantic::SemanticBuilder;
 use serde::Serialize;
 use std::collections::HashMap;
@@ -138,6 +141,37 @@ impl Report {
               }
               _ => {}
             }
+          }
+        }
+        // ServiceWorker
+        AstKind::MemberExpression(expr) => {
+          if let MemberExpression::StaticMemberExpression(static_expr) = expr {
+            if let Expression::Identifier(obj) = static_expr.get_first_object() {
+              if obj.name == "navigator" {
+                if let Some(prop) = expr.static_property_name() {
+                  if prop == "serviceWorker" {
+                    self.process_found(JsFeature::ServiceWorker, static_expr.span);
+                  }
+                }
+              }
+              if obj.name == "performance" {
+                if let Some(prop) = expr.static_property_name() {
+                  if prop == "now" {
+                    self.process_found(JsFeature::PerformanceNow, static_expr.span);
+                  }
+                }
+              }
+            }
+          }
+        }
+        // requestIdleCallback
+        AstKind::CallExpression(expr) => {
+          if expr
+            .callee_name()
+            .unwrap_or("")
+            .contains("requestIdleCallback")
+          {
+            self.process_found(JsFeature::RequestIdleCallback, expr.span);
           }
         }
         _ => {}

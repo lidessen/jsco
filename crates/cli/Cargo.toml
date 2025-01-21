@@ -24,3 +24,4 @@ oxc.workspace = true
 chrono.workspace = true
 maud = "*"
 open = "5.0.1"
+browserslist-rs = "0.17.0"
